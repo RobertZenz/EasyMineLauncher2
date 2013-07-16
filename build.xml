@@ -1,0 +1,49 @@
+<project name="EasyMineLauncher2" default="dist" basedir=".">
+	<description>
+		A free and simple launcher for Minecraft (1.6 and bove).
+	</description>
+
+	<property name="src" value="src" />
+	<property name="build" value="build" />
+	<property name="dist" value="dist" />
+
+	<target name="clean"
+		description="Cleans the working directory from everything build related">
+		<delete dir="${build}" />
+		<delete dir="${dist}" />
+	</target>
+	
+	<target name="init"
+		description="Sets up the current working directory.">
+		<mkdir dir="${build}" />
+		<mkdir dir="${dist}" />
+	</target>
+	
+	<target name="compile" depends="init"
+		description="Compiles all source files.">
+		<javac srcdir="${src}" destdir="${build}"
+			includeantruntime="false" />
+		<manifest file="MANIFEST.MF">
+			<attribute name="Main-Class" value="org.bonsaimind.easyminelauncher2.Main" />
+		</manifest>
+	</target>
+	
+	<target name="dist" depends="compile"
+		description="Creates the jar and a tar archive.">
+		<jar jarfile="${dist}/EasyMineLauncher2.jar" basedir="${build}"
+			manifest="MANIFEST.MF">
+			<fileset dir="${src}" includes="org/bonsaimind/easyminelauncher2/help.txt" />
+		</jar>
+		<tar destfile="${dist}/EasyMineLauncher.tar" basedir=".">
+			<include name="${src}/**" />
+			<include name="${dist}/EasyMineLauncher.jar" />
+			<include name="build.xml" />
+			<include name="CHANGES" />
+			<include name="CONTRIBUTE" />
+			<include name="LICENSE" />
+			<include name="README" />
+			<include name="THANKS" />
+		</tar>
+		<bzip2 src="${dist}/EasyMineLauncher2.tar" destfile="${dist}/EasyMineLauncher2.tar.bz2" />
+	</target>
+</project>
