@@ -40,6 +40,9 @@ public class Main {
 
 	public static void main(String[] args) {
 		String parentDir = System.getProperty("user.home");
+		// Woah...wtf dude?!
+		String libDir = new File(parentDir, "lib").getAbsolutePath();
+		String nativeDir = new File(parentDir, "bin/natives").getAbsolutePath();
 		String version = "1.6.2";
 		String mainClass = "net.minecraft.client.main.Main";
 		String mainMethod = "main";
@@ -51,13 +54,21 @@ public class Main {
 		boolean fullscreen = false;
 
 		List<String> minecraftArgs = new ArrayList<String>();
-
+		
+		// Loading native libraries.
+		System.setProperty("org.lwjgl.librarypath", nativeDir);
+		System.setProperty("net.java.games.input.librarypath", nativeDir);
+		
 		try {
-			URL[] urls = new URL[]{
-				new File(parentDir, ".minecraft/versions/1.6.2/1.6.2.jar").toURI().toURL()
-			};
+			List<URL> urls = new ArrayList<URL>();
+			urls.add(new File(parentDir, ".minecraft/versions/1.6.2/1.6.2.jar").toURI().toURL());
 
-			URLClassLoader loader = new URLClassLoader(urls);
+			// Get all jars from the lib dir.
+			for (File file : new File(libDir).listFiles()) {
+				urls.add(file.toURI().toURL());
+			}
+
+			URLClassLoader loader = new URLClassLoader(urls.toArray(new URL[urls.size()-1]));
 			Class minecraftMainClass = loader.loadClass(mainClass);
 			Method minecraftMainMethod = minecraftMainClass.getMethod(mainMethod, String[].class);
 			minecraftMainMethod.invoke(null, minecraftArgs);
