@@ -41,8 +41,8 @@ public class Main {
 	public static void main(String[] args) {
 		String parentDir = System.getProperty("user.home");
 		// Woah...wtf dude?!
-		String libDir = new File(parentDir, "lib").getAbsolutePath();
-		String nativeDir = new File(parentDir, "bin/natives").getAbsolutePath();
+		String libDir = new File(parentDir, ".minecraft/libraries").getAbsolutePath();
+		String nativeDir = new File(parentDir, ".minecraft/bin/natives").getAbsolutePath();
 		String version = "1.6.2";
 		String mainClass = "net.minecraft.client.main.Main";
 		String mainMethod = "main";
@@ -54,24 +54,22 @@ public class Main {
 		boolean fullscreen = false;
 
 		List<String> minecraftArgs = new ArrayList<String>();
-		
+
 		// Loading native libraries.
 		System.setProperty("org.lwjgl.librarypath", nativeDir);
 		System.setProperty("net.java.games.input.librarypath", nativeDir);
-		
+
 		try {
 			List<URL> urls = new ArrayList<URL>();
 			urls.add(new File(parentDir, ".minecraft/versions/1.6.2/1.6.2.jar").toURI().toURL());
 
-			// Get all jars from the lib dir.
-			for (File file : new File(libDir).listFiles()) {
-				urls.add(file.toURI().toURL());
-			}
+			// Get all jars from the libraries dir.
+			urls.addAll(findJars(new File(libDir)));
 
-			URLClassLoader loader = new URLClassLoader(urls.toArray(new URL[urls.size()-1]));
+			URLClassLoader loader = new URLClassLoader(urls.toArray(new URL[urls.size()]));
 			Class minecraftMainClass = loader.loadClass(mainClass);
 			Method minecraftMainMethod = minecraftMainClass.getMethod(mainMethod, String[].class);
-			minecraftMainMethod.invoke(null, minecraftArgs);
+			minecraftMainMethod.invoke(null, (Object)(new String[] {}));
 		} catch (MalformedURLException ex) {
 			System.err.println(ex);
 		} catch (ClassNotFoundException ex) {
@@ -85,5 +83,21 @@ public class Main {
 		} catch (InvocationTargetException ex) {
 			System.err.println(ex);
 		}
+	}
+
+	private static List<URL> findJars(File parentDir) throws MalformedURLException {
+		List<URL> urls = new ArrayList<URL>();
+
+		for (String child : parentDir.list()) {
+			File file = new File(parentDir, child);
+
+			if (file.isDirectory()) {
+				urls.addAll(findJars(file));
+			} else if (file.isFile()) {
+				urls.add(file.toURI().toURL());
+			}
+		}
+
+		return urls;
 	}
 }
