@@ -28,28 +28,26 @@
 package org.bonsaimind.easyminelauncher2;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.bonsaimind.minecraftmiddleknife.ClassLoaderExtender;
+import org.bonsaimind.minecraftmiddleknife.ClassLoaderExtensionException;
+import org.bonsaimind.minecraftmiddleknife.post16.Kickstarter;
+import org.bonsaimind.minecraftmiddleknife.post16.RunException;
 
 public class Main {
 
 	private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
-	
+
 	public static void main(String[] args) {
 		String parentDir = System.getProperty("user.home");
 		// Woah...wtf dude?!
 		String libDir = new File(parentDir, ".minecraft/libraries").getAbsolutePath();
 		String nativeDir = new File(parentDir, ".minecraft/bin/natives").getAbsolutePath();
 		String version = "1.6.2";
-		String mainClass = "net.minecraft.client.main.Main";
-		String mainMethod = "main";
+		String mainClass = Kickstarter.MAIN_CLASS;
+		String mainMethod = Kickstarter.MAIN_METHOD;
 		String server = "";
 		String port = "";
 		boolean demo = false;
@@ -57,51 +55,23 @@ public class Main {
 		String height = "";
 		boolean fullscreen = false;
 
-		List<String> minecraftArgs = new ArrayList<String>();
-
 		// Loading native libraries.
 		System.setProperty("org.lwjgl.librarypath", nativeDir);
 		System.setProperty("net.java.games.input.librarypath", nativeDir);
 
+		String[] minecraftArgs = new String[0];
+
 		try {
-			List<URL> urls = new ArrayList<URL>();
-			urls.add(new File(parentDir, ".minecraft/versions/1.6.2/1.6.2.jar").toURI().toURL());
+			ClassLoaderExtender.extend(new File(parentDir, ".minecraft/versions/1.6.2/1.6.2.jar").toURI().toURL());
+			ClassLoaderExtender.extendFrom(libDir);
 
-			// Get all jars from the libraries dir.
-			urls.addAll(findJars(new File(libDir)));
-
-			URLClassLoader loader = new URLClassLoader(urls.toArray(new URL[urls.size()]));
-			Class minecraftMainClass = loader.loadClass(mainClass);
-			Method minecraftMainMethod = minecraftMainClass.getMethod(mainMethod, String[].class);
-			minecraftMainMethod.invoke(null, (Object)(new String[] {}));
+			Kickstarter.run(mainClass, mainMethod, minecraftArgs);
 		} catch (MalformedURLException ex) {
-			LOGGER.log(Level.SEVERE, "Failed to launch Minecraft.", ex);
-		} catch (ClassNotFoundException ex) {
-			LOGGER.log(Level.SEVERE, "Failed to launch Minecraft.", ex);
-		} catch (NoSuchMethodException ex) {
-			LOGGER.log(Level.SEVERE, "Failed to launch Minecraft.", ex);
-		} catch (SecurityException ex) {
-			LOGGER.log(Level.SEVERE, "Failed to launch Minecraft.", ex);
-		} catch (IllegalAccessException ex) {
-			LOGGER.log(Level.SEVERE, "Failed to launch Minecraft.", ex);
-		} catch (InvocationTargetException ex) {
-			LOGGER.log(Level.SEVERE, "Failed to launch Minecraft.", ex);
+			LOGGER.log(Level.SEVERE, "Failed to load needed jars.", ex);
+		} catch (ClassLoaderExtensionException ex) {
+			LOGGER.log(Level.SEVERE, "Failed to laod needed jars.", ex);
+		} catch (RunException ex) {
+			LOGGER.log(Level.SEVERE, "Failed to start Minecraft.", ex);
 		}
-	}
-
-	private static List<URL> findJars(File parentDir) throws MalformedURLException {
-		List<URL> urls = new ArrayList<URL>();
-
-		for (String child : parentDir.list()) {
-			File file = new File(parentDir, child);
-
-			if (file.isDirectory()) {
-				urls.addAll(findJars(file));
-			} else if (file.isFile()) {
-				urls.add(file.toURI().toURL());
-			}
-		}
-
-		return urls;
 	}
 }
