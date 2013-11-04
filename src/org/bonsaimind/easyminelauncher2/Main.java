@@ -35,9 +35,13 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Main {
 
+	private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
+	
 	public static void main(String[] args) {
 		String parentDir = System.getProperty("user.home");
 		// Woah...wtf dude?!
@@ -71,17 +75,17 @@ public class Main {
 			Method minecraftMainMethod = minecraftMainClass.getMethod(mainMethod, String[].class);
 			minecraftMainMethod.invoke(null, (Object)(new String[] {}));
 		} catch (MalformedURLException ex) {
-			System.err.println(ex);
+			LOGGER.log(Level.SEVERE, "Failed to launch Minecraft.", ex);
 		} catch (ClassNotFoundException ex) {
-			System.err.println(ex);
+			LOGGER.log(Level.SEVERE, "Failed to launch Minecraft.", ex);
 		} catch (NoSuchMethodException ex) {
-			System.err.println(ex);
+			LOGGER.log(Level.SEVERE, "Failed to launch Minecraft.", ex);
 		} catch (SecurityException ex) {
-			System.err.println(ex);
+			LOGGER.log(Level.SEVERE, "Failed to launch Minecraft.", ex);
 		} catch (IllegalAccessException ex) {
-			System.err.println(ex);
+			LOGGER.log(Level.SEVERE, "Failed to launch Minecraft.", ex);
 		} catch (InvocationTargetException ex) {
-			System.err.println(ex);
+			LOGGER.log(Level.SEVERE, "Failed to launch Minecraft.", ex);
 		}
 	}
 
