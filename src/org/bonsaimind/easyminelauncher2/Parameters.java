@@ -28,36 +28,75 @@
 package org.bonsaimind.easyminelauncher2;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import org.bonsaimind.minecraftmiddleknife.ClassLoaderCreator;
-import org.bonsaimind.minecraftmiddleknife.NativeLoader;
 import org.bonsaimind.minecraftmiddleknife.post16.Kickstarter;
-import org.bonsaimind.minecraftmiddleknife.post16.RunException;
 
-public class Main {
+public class Parameters {
 	
-	private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
+	private boolean demo = false;
+	private boolean fullscreen = false;
+	private String height = "";
+	private String libDir = null;
+	private String mainClass = Kickstarter.MAIN_CLASS;
+	private String mainMethod = Kickstarter.MAIN_METHOD;
+	private String nativeDir = null;
+	private String parentDir = null;
+	private String port = "";
+	private String server = "";
+	private String version = "1.6.2";
+	private String width = "";
 	
-	public static void main(String[] args) {
-		Parameters parameters = new Parameters(args);
-		
-		NativeLoader.loadNativeLibraries(parameters.getNativeDir());
-		
-		String[] minecraftArgs = new String[] { "--version=4" };
-		
-		try {
-			ClassLoaderCreator classLoaderCreator = new ClassLoaderCreator();
-			classLoaderCreator.add(new File(parameters.getParentDir(), ".minecraft/versions/1.6.2/1.6.2.jar"));
-			classLoaderCreator.addRecursively(parameters.getLibDir());
-			
-			Kickstarter.run(classLoaderCreator.createClassLoader(), parameters.getMainClass(), parameters.getMainMethod(), minecraftArgs);
-		} catch (MalformedURLException ex) {
-			LOGGER.log(Level.SEVERE, "Failed to load needed jars.", ex);
-		} catch (RunException ex) {
-			LOGGER.log(Level.SEVERE, "Failed to start Minecraft.", ex);
-		}
+	public Parameters(String[] arguments) {
+		parentDir = System.getProperty("user.home");
+		libDir = new File(parentDir, ".minecraft/libraries").getAbsolutePath();
+		nativeDir = new File(parentDir, ".minecraft/testnatives").getAbsolutePath();
+	}
+	
+	public boolean isDemo() {
+		return demo;
+	}
+	
+	public boolean isFullscreen() {
+		return fullscreen;
+	}
+	
+	public String getHeight() {
+		return height;
+	}
+	
+	public String getLibDir() {
+		return libDir;
+	}
+	
+	public String getMainClass() {
+		return mainClass;
+	}
+	
+	public String getMainMethod() {
+		return mainMethod;
+	}
+	
+	public String getNativeDir() {
+		return nativeDir;
+	}
+	
+	public String getParentDir() {
+		return parentDir;
+	}
+	
+	public String getPort() {
+		return port;
+	}
+	
+	public String getServer() {
+		return server;
+	}
+	
+	public String getVersion() {
+		return version;
+	}
+	
+	public String getWidth() {
+		return width;
 	}
 }
