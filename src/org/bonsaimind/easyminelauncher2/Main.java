@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Robert 'Bobby' Zenz. All rights reserved.
+ * Copyright 2014 Robert 'Bobby' Zenz. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -31,15 +31,16 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.bonsaimind.minecraftmiddleknife.ClassLoaderExtender;
 import org.bonsaimind.minecraftmiddleknife.ClassLoaderExtensionException;
 import org.bonsaimind.minecraftmiddleknife.post16.Kickstarter;
 import org.bonsaimind.minecraftmiddleknife.post16.RunException;
 
 public class Main {
-
+	
 	private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
-
+	
 	public static void main(String[] args) {
 		String parentDir = System.getProperty("user.home");
 		// Woah...wtf dude?!
@@ -54,17 +55,17 @@ public class Main {
 		String width = "";
 		String height = "";
 		boolean fullscreen = false;
-
+		
 		// Loading native libraries.
 		System.setProperty("org.lwjgl.librarypath", nativeDir);
 		System.setProperty("net.java.games.input.librarypath", nativeDir);
-
+		
 		String[] minecraftArgs = new String[0];
-
+		
 		try {
 			ClassLoaderExtender.extend(new File(parentDir, ".minecraft/versions/1.6.2/1.6.2.jar").toURI().toURL());
 			ClassLoaderExtender.extendFrom(libDir);
-
+			
 			Kickstarter.run(mainClass, mainMethod, minecraftArgs);
 		} catch (MalformedURLException ex) {
 			LOGGER.log(Level.SEVERE, "Failed to load needed jars.", ex);
