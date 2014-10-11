@@ -60,6 +60,10 @@ public class Parameters {
 				height = Integer.parseInt(argument.substring(9));
 			} else if (argument.equals("--help")) {
 				printHelp = true;
+			} else if (argument.startsWith("--jar=")) {
+				jar = argument.substring(6);
+			} else if (argument.startsWith("--jar-dir=")) {
+				jarDir = argument.substring(10);
 			} else if (argument.startsWith("--lib-dir=")) {
 				libDir = argument.substring(10);
 			} else if (argument.startsWith("--main-class=")) {
@@ -185,6 +189,7 @@ public class Parameters {
 	@Override
 	public String toString() {
 		StringBuilder value = new StringBuilder();
+		value.append("demo: ").append(demo).append("\n");
 		value.append("jarDir (exists: ").append(new File(jarDir).exists()).append("): ").append(jarDir).append("\n");
 		value.append("jar (exists: ").append(new File(jar).exists()).append("): ").append(jar).append("\n");
 		// value.append("lwjglDir (exists: ").append(new
@@ -202,7 +207,6 @@ public class Parameters {
 		// for (String option : options) {
 		// value.append("    ").append(option).append("\n");
 		// }
-		value.append("demo: ").append(demo).append("\n");
 		value.append("parentDir (exists: ").append(new File(parentDir).exists()).append("): ").append(parentDir).append("\n");
 		// value.append("applet: ").append(appletToLoad).append("\n");
 		// value.append("blendWith: ").append("\n");
