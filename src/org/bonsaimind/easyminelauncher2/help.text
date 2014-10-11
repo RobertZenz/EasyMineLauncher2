@@ -1,0 +1,21 @@
+  --help                   Prints this help.
+  --version                Prints the version.
+
+
+  --jar=MINECRAFT.JAR      Set the path to the minecraft.jar.
+  --jar-dir=DIRECTORY      Set the directory for the jar files.
+                           Either specify jar-dir or this.
+  --native-dir=DIRECTORY   Set the directory for the native files of lwjgl.
+  --parent-dir=DIRECTORY   Set the parent directory. This effectively changes
+                           the location of the .minecraft folder.
+  --port=PORT              Set the port of the server, if not set it will revert
+                           to 25565.
+  --server=SERVER          Set the address of the server which directly
+                           to connect to.
+  --demo                   Trigger Demo-Mode. This might break other stuff.
+
+
+  --height=HEIGHT          The width of the window.
+  --width=WIDTH            The height of the window.
+  --dump                   Chickens out before doing anything and prints all
+                           of the configuration values.

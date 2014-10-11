@@ -27,7 +27,11 @@
  */
 package org.bonsaimind.easyminelauncher2;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,9 +44,26 @@ import org.bonsaimind.minecraftmiddleknife.post16.RunException;
 public class Main {
 	
 	private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
+	private static final String NAME = "EasyMineLauncher2";
+	private static final String VERSION = "0.1";
 	
 	public static void main(String[] args) {
 		Parameters parameters = new Parameters(args);
+		
+		if (parameters.isPrintHelp()) {
+			printHelp();
+			return;
+		}
+		
+		if (parameters.isPrintVersion()) {
+			printVersion();
+			return;
+		}
+		
+		if (parameters.isPrintDump()) {
+			System.out.println(parameters.toString());
+			return;
+		}
 		
 		NativeLoader.loadNativeLibraries(parameters.getNativeDir());
 		
@@ -50,7 +71,7 @@ public class Main {
 		
 		try {
 			ClassLoaderCreator classLoaderCreator = new ClassLoaderCreator();
-			classLoaderCreator.add(new File(parameters.getParentDir(), ".minecraft/versions/1.6.2/1.6.2.jar"));
+			classLoaderCreator.add(new File(parameters.getParentDir(), "versions/1.6.2/1.6.2.jar"));
 			classLoaderCreator.addRecursively(parameters.getLibDir());
 			
 			Kickstarter.run(classLoaderCreator.createClassLoader(), parameters.getMainClass(), parameters.getMainMethod(), minecraftArgs);
@@ -59,5 +80,30 @@ public class Main {
 		} catch (RunException ex) {
 			LOGGER.log(Level.SEVERE, "Failed to start Minecraft.", ex);
 		}
+	}
+	
+	private static void printHelp() {
+		System.out.println("Usage: " + NAME + ".jar [OPTIONS]");
+		System.out.println("Launch Minecraft directly.");
+		System.out.println("");
+		
+		InputStream stream = Main.class.getResourceAsStream("/org/bonsaimind/easyminelauncher2/help.text");
+		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+		
+		String line;
+		try {
+			while ((line = reader.readLine()) != null) {
+				System.out.println(line);
+			}
+			reader.close();
+		} catch (IOException e) {
+			LOGGER.log(Level.SEVERE, "Failed to read the help-file!", e);
+		}
+	}
+	
+	private static void printVersion() {
+		System.out.println(NAME + " " + VERSION);
+		System.out.println("Copyright 2014 Robert 'Bobby' Zenz. All rights reserved.");
+		System.out.println("Licensed under 2-clause-BSD.");
 	}
 }
