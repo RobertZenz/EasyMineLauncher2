@@ -35,7 +35,7 @@
 			manifest="MANIFEST.MF">
 			<fileset dir="${src}" includes="org/bonsaimind/easyminelauncher2/help.text" />
 		</jar>
-		<tar destfile="${dist}/EasyMineLauncher.tar" basedir=".">
+		<tar destfile="${dist}/EasyMineLauncher2.tar" basedir=".">
 			<include name="${src}/**" />
 			<include name="${dist}/EasyMineLauncher2.jar" />
 			<include name="build.xml" />
