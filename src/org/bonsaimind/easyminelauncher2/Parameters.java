@@ -195,6 +195,9 @@ public class Parameters {
 		// value.append("lwjglDir (exists: ").append(new
 		// File(lwjglDir).exists()).append("): ").append(lwjglDir).append("\n");
 		// value.append("password: ").append(password).append("\n");
+		value.append("libDir (exists: ").append(new File(libDir).exists()).append("): ").append(libDir).append("\n");
+		value.append("mainClass: ").append(mainClass).append("\n");
+		value.append("mainMethod: ").append(mainMethod).append("\n");
 		value.append("nativeDir (exists: ").append(new File(nativeDir).exists()).append("): ").append(nativeDir).append("\n");
 		// value.append("additionalJars:").append("\n");
 		// for (String additionalJar : additionalJars) {

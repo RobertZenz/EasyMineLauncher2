@@ -28,7 +28,6 @@
 package org.bonsaimind.easyminelauncher2;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -67,11 +66,11 @@ public class Main {
 		
 		NativeLoader.loadNativeLibraries(parameters.getNativeDir());
 		
-		String[] minecraftArgs = new String[] { "--version=4" };
+		String[] minecraftArgs = new String[] { "--userProperties=dummy", "--accessToken=TOKEN", "--version=4" };
 		
 		try {
 			ClassLoaderCreator classLoaderCreator = new ClassLoaderCreator();
-			classLoaderCreator.add(new File(parameters.getParentDir(), "versions/1.6.2/1.6.2.jar"));
+			classLoaderCreator.add(parameters.getJar());
 			classLoaderCreator.addRecursively(parameters.getLibDir());
 			
 			Kickstarter.run(classLoaderCreator.createClassLoader(), parameters.getMainClass(), parameters.getMainMethod(), minecraftArgs);
