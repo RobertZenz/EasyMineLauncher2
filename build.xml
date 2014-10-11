@@ -37,7 +37,7 @@
 		</jar>
 		<tar destfile="${dist}/EasyMineLauncher.tar" basedir=".">
 			<include name="${src}/**" />
-			<include name="${dist}/EasyMineLauncher.jar" />
+			<include name="${dist}/EasyMineLauncher2.jar" />
 			<include name="build.xml" />
 			<include name="CHANGES" />
 			<include name="CONTRIBUTE" />
