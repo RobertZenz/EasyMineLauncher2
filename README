@@ -14,3 +14,9 @@ launcher, is finished in my opinion. Everything is in place to create this
 launcher and I can actually start Minecraft with it.
 
 So...I'll see to it that it gets done.
+
+The current state of the source allows you to actually use and launch Minecraft.
+It's rather complicated (you need to set lib-dir, native-dir and jar and also
+extract the native dependencies and gather all other dependencies...well, it's
+rather complicated), but possible.
+
